@@ -1,0 +1,26 @@
+POST http://localhost:8080/ws
+Content-Type: text/xml; charset=utf-8
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:ns="http://soap.sia.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ns:processXmlRequest>
+            <ns:xml><![CDATA[
+            <person>
+               <name>Тест</name>
+               <surname>Тестов</surname>
+               <patronymic>Тестович</patronymic>
+               <birthDate>1990-01-01</birthDate>
+               <gender>MAN</gender>
+               <document>
+                  <series>1333</series>
+                  <number>112233</number>
+                  <type>PASSPORT</type>
+                  <issueDate>2020-01-01</issueDate>
+               </document>
+            </person>
+         ]]></ns:xml>
+        </ns:processXmlRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

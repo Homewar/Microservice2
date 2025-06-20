@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.sia'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    wsdl2java
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Базы данных
+    implementation 'org.postgresql:postgresql:42.7.3'
+    runtimeOnly 'com.mysql:mysql-connector-j:8.1.0'
+
+    // Apache CXF (SOAP)
+    implementation 'org.apache.cxf:cxf-spring-boot-starter-jaxws:4.0.5'
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:4.0.6'
+    implementation 'org.apache.cxf:cxf-rt-transports-http:4.0.5'
+
+    // JAXB и JAX-WS
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+    implementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.2'
+    implementation 'com.sun.xml.ws:jaxws-ri:4.0.3'
+    implementation 'com.sun.xml.ws:jaxws-rt:4.0.3'
+
+    // WSDL
+    implementation 'wsdl4j:wsdl4j:1.6.3'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+    // Текстовые утилиты
+    implementation 'org.apache.commons:commons-text:1.9'
+
+
+    // Тесты
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.register('wsdl2java', JavaExec) {
+    group = 'build'
+    description = 'Generate SOAP client stubs from WSDL (Apache CXF 4.x)'
+
+    mainClass.set('org.apache.cxf.tools.wsdlto.WSDLToJava')
+    classpath = configurations.wsdl2java
+
+    args = [
+            '-d', 'src/main/java',
+            '-p', 'com.sia.soapclient',
+            '-client',
+            '-keep',
+            '-verbose',
+            '-databinding', 'jaxb',
+            'src/main/resources/wsdl/xmlService.wsdl'
+    ]
+}
+
+tasks.named('compileJava') {
+    //dependsOn tasks.named('wsdl2java')
+}
