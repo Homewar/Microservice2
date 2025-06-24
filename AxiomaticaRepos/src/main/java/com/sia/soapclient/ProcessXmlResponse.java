@@ -28,18 +28,37 @@ import jakarta.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "result" })
-@XmlRootElement(name = "processXmlResponse", namespace = "http://soap.sia.com/")
+@XmlType(name = "", propOrder = {
+    "result"
+})
+@XmlRootElement(name = "processXmlResponse")
 public class ProcessXmlResponse {
 
-    @XmlElement(name = "result", namespace = "http://soap.sia.com/", required = true)
+    @XmlElement(required = true)
     protected String result;
 
+    /**
+     * Gets the value of the result property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
     public String getResult() {
         return result;
     }
 
+    /**
+     * Sets the value of the result property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
     public void setResult(String value) {
         this.result = value;
     }
+
 }
