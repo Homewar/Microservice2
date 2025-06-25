@@ -2,5 +2,15 @@ POST http://localhost:8081/api/persons
 Content-Type: application/json
 
 {
-
+  "name": "Тест",
+  "surname": "Тестов",
+  "patronymic": "Тестович",
+  "birthDate": "1990-01-01",
+  "gender": "MAN",
+  "document": {
+    "series": "1333",
+    "number": "112233",
+    "type": "PASSPORT",
+    "issueDate": "2020-01-01"
+  }
 }

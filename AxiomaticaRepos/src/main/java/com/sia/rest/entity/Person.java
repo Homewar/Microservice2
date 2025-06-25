@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Id;
 
@@ -48,8 +49,14 @@ public class Person {
     private Gender gender;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "document_id")
-
+    @JoinColumn(name = "document_id", nullable = false)
     private Document document;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

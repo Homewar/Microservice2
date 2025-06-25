@@ -1,5 +1,6 @@
 package com.sia.rest.controllers;
 
+import com.sia.rest.repository.PersonRepository;
 import com.sia.rest.repository.SoapResponseRepository;
 import com.sia.rest.adapter.XmlConverter;
 import com.sia.rest.entity.Person;
@@ -22,18 +23,23 @@ import java.time.LocalDateTime;
 @Slf4j
 public class SaveJSONController {
 
-    private final WebServiceTemplate webServiceTemplate;
+    private final PersonRepository personRepository;
     private final SoapResponseRepository soapResponseRepository;
+    private final WebServiceTemplate webServiceTemplate;
 
-    public SaveJSONController(WebServiceTemplate webServiceTemplate,
-                              SoapResponseRepository soapResponseRepository) {
-        this.webServiceTemplate = webServiceTemplate;
+    public SaveJSONController(PersonRepository personRepository,
+                              SoapResponseRepository soapResponseRepository,
+                              WebServiceTemplate webServiceTemplate) {
+        this.personRepository = personRepository;
         this.soapResponseRepository = soapResponseRepository;
+        this.webServiceTemplate = webServiceTemplate;
     }
 
     @PostMapping("/persons")
     public ResponseEntity<String> processPerson(@RequestBody @Valid Person person) {
         try {
+            Person savedPerson = personRepository.save(person);
+            log.info("Saved person id={} document_id={}", savedPerson.getId(), savedPerson.getDocument().getId());
             log.info("Received person: {}", person);
             String xml = XmlConverter.converter(person);
             log.info("Generated XML:\n{}", xml);

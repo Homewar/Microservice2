@@ -1,13 +1,12 @@
 package com.sia.rest.repository;
 
-
-import com.sia.rest.entity.Person;
+import com.sia.rest.entity.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PersonRepository
-        extends JpaRepository<Person, Long>,
-        JpaSpecificationExecutor<Person> {
+public interface DocumentRepository
+        extends JpaRepository<Document, Long>,
+        JpaSpecificationExecutor<Document> {
 }

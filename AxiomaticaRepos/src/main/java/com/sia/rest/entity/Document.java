@@ -1,27 +1,21 @@
 package com.sia.rest.entity;
 
-import com.sia.rest.adapter.LocalDateAdapter;
-import com.sia.rest.annotation.ValidDate;
-import com.sia.rest.annotation.ValidEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import lombok.Getter;
-import lombok.Setter;
-import jakarta.persistence.Id;
-
+import lombok.*;
 import java.time.LocalDate;
 
-
-@Setter
-@Getter
 @Entity
-@XmlAccessorType(XmlAccessType.FIELD)
+@Table(name = "document")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Document {
 
-    public enum DocumentType{
+    public enum DocumentType {
         PASSPORT,
         INTERNATIONAL_PASSPORT,
         DRIVER
@@ -31,20 +25,36 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "can't be null")
-    private String series;
-
-    @NotNull(message = "can't be null")
-    private String number;
-
+    @NotNull(message = "type can't be null")
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "can't be null")
-    @ValidEnum(enumClass = DocumentType.class, message = "Valid values PASSPORT, INTERNATIONAL_PASSPORT, DRIVER.\n" +
-            "\n")
+    @Column(name = "type", nullable = false)
     private DocumentType type;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    @NotNull(message = "date can't be null")
-    @ValidDate
+    @NotNull(message = "series can't be null")
+    @Column(nullable = false)
+    private String series;
+
+    @NotNull(message = "number can't be null")
+    @Column(nullable = false)
+    private String number;
+
+    @NotNull(message = "issueDate can't be null")
+    @Column(name = "issue_date", nullable = false)
     private LocalDate issueDate;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDate.now();
+    }
+
+    /**
+     * Для выдачи только типа в JSON-представлении Person
+     */
+    @JsonProperty("documentType")
+    public String getDocumentTypeForJson() {
+        return type != null ? type.name() : null;
+    }
 }

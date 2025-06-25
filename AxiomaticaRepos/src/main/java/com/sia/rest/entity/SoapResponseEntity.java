@@ -15,7 +15,6 @@ public class SoapResponseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
     @Column(name = "response_body", columnDefinition = "TEXT")
     private String responseBody;
 
